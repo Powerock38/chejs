@@ -13,7 +13,7 @@ class Piece {
     draw(ctx) {
         ctx.fillStyle = this.color
         ctx.font = (SQUARE_SIZE / 2) + "px Arial"
-        ctx.fillText(PIECE_EMOJIS[this.type], this.x * SQUARE_SIZE + SQUARE_SIZE / 4, this.y * SQUARE_SIZE + SQUARE_SIZE / 1.5)
+        ctx.fillText(PIECE_EMOJIS[this.type], Math.floor(this.x * SQUARE_SIZE + SQUARE_SIZE / 4), Math.floor(this.y * SQUARE_SIZE + SQUARE_SIZE / 1.5))
     }
 
     move(terrain, x, y) {
@@ -28,17 +28,17 @@ class Piece {
 
 class Pawn extends Piece {
 
-    static moves(x, y, terrain, facing, hasMoved) {
+    static moves(x, y, terrain, facing, hasMoved, color) {
         const moves = []
-        const unit = facing === FACING.NORTH ? -1 : 1
+        const unit = facing === FACING.SOUTH ? 1 : -1
 
-        if (!terrain[y + unit][x])
+        if (!terrain[y + unit]?.[x])
             moves.push({ x, y: y + unit })
 
-        if (terrain[y + unit][x - 1] && terrain[y + unit][x - 1].color !== this.color)
+        if (terrain[y + unit]?.[x - 1] && terrain[y + unit][x - 1].color !== color)
             moves.push({ x: x - 1, y: y + unit })
 
-        if (terrain[y + unit][x + 1] && terrain[y + unit][x + 1].color !== this.color)
+        if (terrain[y + unit]?.[x + 1] && terrain[y + unit][x + 1].color !== color)
             moves.push({ x: x + 1, y: y + unit })
 
         if (!hasMoved)
@@ -52,7 +52,7 @@ class Pawn extends Piece {
     }
 
     moves(terrain) {
-        return Pawn.moves(this.x, this.y, terrain, this.facing, this.hasMoved)
+        return Pawn.moves(this.x, this.y, terrain, this.facing, this.hasMoved, this.color)
     }
 
 }
